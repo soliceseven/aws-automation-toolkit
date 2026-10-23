@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """
-ECR Push — build a Docker image and push it to ECR.
+Build a Docker image and push it to ECR.
 
 Usage:
     python ecr_push.py --repo my-app --tag v1.2 [--dockerfile ./Dockerfile --context .]
-Requires: docker CLI logged in (aws ecr get-login-password | docker login ...)
+Requires: Docker CLI with an authenticated session (aws ecr get-login-password | docker login ...)
 """
 
 import argparse
 import base64
-import boto3
 import subprocess
 import sys
+
+import boto3
 
 
 def run(cmd, **kw):
@@ -45,8 +46,10 @@ def main():
     token = ecr.get_authorization_token()["authorizationData"][0]
     pw = base64.b64decode(token["authorizationToken"]).decode().split(":", 1)[1]
     registry = token["proxyEndpoint"]
-    run(["docker", "login", "--username", "AWS", "--password-stdin", registry],
-        input=pw.encode())
+    run(
+        ["docker", "login", "--username", "AWS", "--password-stdin", registry],
+        input=pw.encode(),
+    )
 
     image = f"{uri}:{args.tag}"
     run(["docker", "build", "-f", args.dockerfile, "-t", image, args.context])

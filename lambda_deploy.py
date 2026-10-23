@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """
-Lambda Deploy — zip a function directory and publish a new version.
+Package a function directory and update a Lambda function. Use `--publish` to publish a new version.
 
 Usage:
     python lambda_deploy.py --function my-func --src ./lambda_src [--profile NAME]
 """
 
 import argparse
-import boto3
 import io
 import sys
 import zipfile
 from pathlib import Path
+
+import boto3
 
 
 def zip_dir(src: Path) -> bytes:
@@ -38,7 +39,7 @@ def main():
         sys.exit(1)
 
     payload = zip_dir(src)
-    print(f"Packaged {src} -> {len(payload)/1024:.1f} KB")
+    print(f"Packaged {src} -> {len(payload) / 1024:.1f} KB")
 
     lam = boto3.Session(profile_name=args.profile).client("lambda")
     resp = lam.update_function_code(FunctionName=args.function, ZipFile=payload)

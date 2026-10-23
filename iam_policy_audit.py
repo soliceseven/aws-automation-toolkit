@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-IAM Policy Audit — flag customer-managed policies with overly broad permissions.
+Find overly broad permissions in customer-managed IAM policies.
 
 Flags: Action "*" or "service:*", Resource "*", and known risky combos.
 Usage:
@@ -8,12 +8,8 @@ Usage:
 """
 
 import argparse
+
 import boto3
-import json
-import sys
-
-
-RISKY_ACTIONS = {"*", "iam:*", "s3:*"}
 
 
 def policy_is_risky(doc):
@@ -31,7 +27,7 @@ def policy_is_risky(doc):
         if isinstance(resources, str):
             resources = [resources]
         for a in actions:
-            if a in RISKY_ACTIONS or a.endswith(":*") and a.split(":")[0] in ("iam",):
+            if a == "*" or a.lower().endswith(":*"):
                 findings.append(f"broad-action:{a}")
         if "*" in resources and any(a != "" for a in actions):
             findings.append("resource-star")
