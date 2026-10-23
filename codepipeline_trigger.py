@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CodePipeline Trigger — start an execution and optionally wait for its status.
+Start a CodePipeline execution and optionally wait for its status.
 
 Usage:
     python codepipeline_trigger.py --pipeline my-pipeline [--profile NAME]

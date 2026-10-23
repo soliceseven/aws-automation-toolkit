@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CloudFormation Deploy — create or update a stack from a template.
+Create or update a CloudFormation stack from a template.
 
 Usage:
     python cfn_deploy.py --stack my-stack --template template.yaml [--params Key=Val ...]

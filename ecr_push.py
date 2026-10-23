@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-ECR Push — build a Docker image and push it to ECR.
+Build a Docker image and push it to ECR.
 
 Usage:
     python ecr_push.py --repo my-app --tag v1.2 [--dockerfile ./Dockerfile --context .]
-Requires: docker CLI logged in (aws ecr get-login-password | docker login ...)
+Requires: Docker CLI with an authenticated session (aws ecr get-login-password | docker login ...)
 """
 
 import argparse

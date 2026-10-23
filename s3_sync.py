@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-S3 Sync — upload a local directory to S3 (artifacts, static sites).
+Upload a local directory to S3, such as build artifacts or static site files.
 
 Usage:
     python s3_sync.py --src ./dist --bucket my-bucket [--prefix artifacts/] [--delete]

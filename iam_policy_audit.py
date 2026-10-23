@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-IAM Policy Audit — flag customer-managed policies with overly broad permissions.
+Find overly broad permissions in customer-managed IAM policies.
 
 Flags: Action "*" or "service:*", Resource "*", and known risky combos.
 Usage:

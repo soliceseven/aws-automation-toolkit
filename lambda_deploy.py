@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Lambda Deploy — zip a function directory and publish a new version.
+Package a function directory and update a Lambda function. Use `--publish` to publish a new version.
 
 Usage:
     python lambda_deploy.py --function my-func --src ./lambda_src [--profile NAME]
