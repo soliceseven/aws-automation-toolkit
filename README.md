@@ -6,12 +6,12 @@ Python/Boto3 scripts for building and automating pipelines on AWS — Lambda dep
 
 | Script | What it does |
 |--------|--------------|
-| `lambda_deploy.py` | Zips a Lambda function dir and publishes a new version |
+| `lambda_deploy.py` | Zips and updates a Lambda function; optionally publishes a version with `--publish` |
 | `ecr_push.py` | Builds a Docker image and pushes it to ECR |
 | `cfn_deploy.py` | Deploys/updates a CloudFormation stack from a template |
-| `codepipeline_trigger.py` | Starts a CodePipeline execution and tails its status |
+| `codepipeline_trigger.py` | Starts a CodePipeline execution; optionally waits for status with `--wait` |
 | `s3_sync.py` | Syncs a local dir to S3 (artifacts, static sites) |
-| `iam_policy_audit.py` | Flags overly permissive IAM policies (`*` actions/resources) |
+| `iam_policy_audit.py` | Audits customer-managed policies with `Allow` statements for `*` or service-wide wildcard actions (e.g. `s3:*`, `iam:*`), or `Resource: *` |
 
 ## Setup
 

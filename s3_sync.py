@@ -7,10 +7,11 @@ Usage:
 """
 
 import argparse
-import boto3
 import mimetypes
 import sys
 from pathlib import Path
+
+import boto3
 
 
 def main():
@@ -18,8 +19,11 @@ def main():
     p.add_argument("--src", required=True)
     p.add_argument("--bucket", required=True)
     p.add_argument("--prefix", default="")
-    p.add_argument("--delete", action="store_true",
-                   help="Delete remote objects not present locally")
+    p.add_argument(
+        "--delete",
+        action="store_true",
+        help="Delete remote objects not present locally",
+    )
     p.add_argument("--profile", default=None)
     args = p.parse_args()
 

@@ -7,9 +7,10 @@ Usage:
 """
 
 import argparse
-import boto3
 import sys
 import time
+
+import boto3
 
 
 def wait_for_stack(cfn, stack, timeout=1800):
@@ -18,9 +19,13 @@ def wait_for_stack(cfn, stack, timeout=1800):
         desc = cfn.describe_stacks(StackName=stack)["Stacks"][0]
         status = desc["StackStatus"]
         print(f"  {status}")
-        if status.endswith("_COMPLETE"):
+        if status in ("CREATE_COMPLETE", "UPDATE_COMPLETE"):
             return True
-        if status.endswith("_FAILED") or "ROLLBACK" in status:
+        if (
+            status.endswith("_FAILED")
+            or "ROLLBACK" in status
+            or status == "DELETE_COMPLETE"
+        ):
             print(f"Stack failed: {status}", file=sys.stderr)
             return False
         time.sleep(15)
@@ -33,8 +38,12 @@ def main():
     p.add_argument("--stack", required=True)
     p.add_argument("--template", required=True, help="Path to template file")
     p.add_argument("--params", nargs="*", default=[], help="Key=Val overrides")
-    p.add_argument("--capabilities", nargs="*", default=["CAPABILITY_IAM"],
-                   help="e.g. CAPABILITY_IAM CAPABILITY_NAMED_IAM")
+    p.add_argument(
+        "--capabilities",
+        nargs="*",
+        default=["CAPABILITY_IAM"],
+        help="e.g. CAPABILITY_IAM CAPABILITY_NAMED_IAM",
+    )
     p.add_argument("--profile", default=None)
     p.add_argument("--region", default=None)
     args = p.parse_args()
@@ -47,16 +56,26 @@ def main():
         k, _, v = kv.partition("=")
         params.append({"ParameterKey": k, "ParameterValue": v})
 
-    cfn = boto3.Session(profile_name=args.profile, region_name=args.region).client("cloudformation")
+    cfn = boto3.Session(profile_name=args.profile, region_name=args.region).client(
+        "cloudformation"
+    )
 
     exists = True
     try:
         cfn.describe_stacks(StackName=args.stack)
-    except cfn.exceptions.ClientError:
-        exists = False
+    except cfn.exceptions.ClientError as e:
+        error = getattr(e, "response", {}).get("Error", {})
+        if error.get("Code") == "ValidationError" and "does not exist" in str(e):
+            exists = False
+        else:
+            raise
 
-    kwargs = dict(StackName=args.stack, TemplateBody=body,
-                  Parameters=params, Capabilities=args.capabilities)
+    kwargs = dict(
+        StackName=args.stack,
+        TemplateBody=body,
+        Parameters=params,
+        Capabilities=args.capabilities,
+    )
     if exists:
         print(f"Updating stack {args.stack}...")
         try:
