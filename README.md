@@ -4,7 +4,7 @@ Use these Python and Boto3 scripts to automate AWS workflows: deploy Lambda func
 
 ## Overview
 
-Each script is standalone: no framework, no configuration file, no shared state. Pick one and run it from the command line with an AWS profile. They use the default AWS credential chain when `--profile` is omitted.
+Run just the script you need. For example, `codepipeline_trigger.py --wait` waits for the pipeline run to finish. Pass `--profile NAME` to select an AWS profile, or omit it to use the default credential chain.
 
 ## Scripts
 
